@@ -26,7 +26,7 @@ namespace FrigerExe
         public int GetFloorOfShelf() { return _floorOfShelf; }
         public int GetSpace() { return _space; }
         public List<Item> GetItemsOnShelf() { return _itemsOnShelf; }
-        
+
         public void SetSpace(int spc) { _space = spc; }
 
         public void AddItem(Item i)
@@ -67,7 +67,7 @@ namespace FrigerExe
         public string ToString()
         {
             string result = $"id: {this.GetId()}\n floor of shelf: {this.GetFloorOfShelf()}\n space: {this.GetSpace()}\n items on shelves: ";
-            foreach ( Item i in _itemsOnShelf)
+            foreach (Item i in _itemsOnShelf)
             {
                 result += i.ToString();
             }

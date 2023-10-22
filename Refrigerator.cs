@@ -21,7 +21,7 @@ namespace FrigerExe
             _color = color;
             _numOfShelves = numOfShelves;
             _shelfList = new List<Shelf>();
-            
+
         }
 
         public int GetId() { return _id; }
@@ -40,7 +40,7 @@ namespace FrigerExe
             else { _shelfList.Add(s); }
 
         }
-         public void RemoveShelf(Shelf s)
+        public void RemoveShelf(Shelf s)
         {
             _shelfList.Remove(s);
         }
@@ -57,11 +57,7 @@ namespace FrigerExe
 
         public void AddItem(Item i)
         {
-            //Item itemToAdd = new Item();
-            //foreach(Shelf s in _shelfList)
-            //{
-            //    s.GetItemsOnShelf().Find(Predicate<>)
-            //}
+
             bool predicate(Shelf s)
             {
                 return s.SpaceLeft() - i.GetSpace() >= 0;
@@ -93,8 +89,9 @@ namespace FrigerExe
             return itemToRemove;
         }
 
-        public void CleanFriger()
+        public List<Item> CleanFriger()
         {
+            List<Item> ItemsToRemove = new List<Item>();
             DateTime today = DateTime.Today;
             foreach (Shelf s in _shelfList)
             {
@@ -102,11 +99,13 @@ namespace FrigerExe
                 {
                     if (i.GetExpiryDate() < today)
                     {
+                        ItemsToRemove.Add(i);
                         s.RemoveItem(i);
                     }
 
                 }
             }
+            return ItemsToRemove;
         }
 
         public List<Item> WhatToEat(Item.Kashrut kashrut, Item.Type type)
@@ -130,11 +129,13 @@ namespace FrigerExe
         {
             if (this.SpaceLeft() >= 20)
             {
+                Console.WriteLine("There is space in friger");
                 return;
             }
             this.CleanFriger();
             if (this.SpaceLeft() >= 20)
             {
+                Console.WriteLine("There is space in friger after cleaning");
                 return;
             }
             int freeSpace = this.SpaceLeft();
@@ -222,9 +223,9 @@ namespace FrigerExe
             {
                 result += s.ToString();
             }
-                return result;
+            return result;
         }
-       
+
 
 
     }

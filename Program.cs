@@ -8,12 +8,18 @@ namespace FrigerExe
     {
         static List<Refrigerator> refrigeratorsList = new List<Refrigerator>();
 
-        public List<Refrigerator> SortfrigeBySpace(List<Refrigerator> frigerList)
+        public static List<Refrigerator> SortfrigeBySpace(List<Refrigerator> frigerList)
         {
             frigerList = frigerList.OrderByDescending(o => o.SpaceLeft()).ToList();
             return frigerList;
         }
-        public void EnterItemToFriger()
+        public static List<Item> SortItemByExpiryDate(List<Item> itemToSort)
+        {
+            itemToSort = itemToSort.OrderBy(o => o.GetExpiryDate()).ToList();
+            return itemToSort;
+        }
+
+        public static void EnterItemToFriger()
         {
             Console.WriteLine("Enter friger id:");
             int frigerId = Convert.ToInt32(Console.ReadLine());
@@ -21,15 +27,30 @@ namespace FrigerExe
             string name = Console.ReadLine();
             Console.WriteLine("Enter type (drink, food):");
             string type = Console.ReadLine();
-            Type userType; 
-            userType = (Type)Enum.Parse(typeof(Type), type);
+            Item.Type userType;
+            if (type == "food" || type == "drink")
+            {
+                userType = (Item.Type)Enum.Parse(typeof(Item.Type), type);
+            }
+            else
+            {
+                Console.WriteLine("The type input incorrect!");
+                return;
+            }
+
             Console.WriteLine("Enter kashrut (dairy, meaty, parve):");
-            string kashrut  = Console.ReadLine();
+            string kashrut = Console.ReadLine();
+            Item.Kashrut userKashrut;
+            if (kashrut == "dairy" || kashrut == "parve" || kashrut == "meaty")
+            {
+                userKashrut = (Item.Kashrut)Enum.Parse(typeof(Item.Kashrut), kashrut);
+            }
+            else
+            {
+                Console.WriteLine("The kashrut input incorrect!");
+                return;
+            }
 
-            Kashrut userKashrut;
-
-            //האם זה דרך נכונה או שעדיף לעשות עם switch
-            userKashrut = (Kashrut)Enum.Parse(typeof(Kashrut), kashrut);
             Console.WriteLine("Enter expiry date: year:");
             int year = Convert.ToInt32(Console.ReadLine());
             Console.WriteLine("Enter expiry date: month:");
@@ -40,19 +61,16 @@ namespace FrigerExe
             Console.WriteLine("Enter space");
             int space = Convert.ToInt32(Console.ReadLine());
             Item item = new Item(name, userType, userKashrut, date, space);
-            Refrigerator frigerToInsert;
+
             foreach (Refrigerator r in refrigeratorsList)
             {
                 if (r.GetId() == frigerId)
                 {
                     r.AddItem(item);
+                    Console.WriteLine("The item added to the friger.");
                     break;
                 }
             }
-            //if (!Enum.TryParse<Type>(type, out userType))
-            //{
-            //    Console.WriteLine("The value is incorrect, enter a new value.");
-            //}
 
 
 
@@ -62,7 +80,6 @@ namespace FrigerExe
         {
             Console.WriteLine("Hello World!");
 
-            //List<Refrigerator> refrigeratorsList = new List<Refrigerator>();
 
             Refrigerator r1 = new Refrigerator("abcd", "green", 3);
             refrigeratorsList.Add(r1);
@@ -88,70 +105,130 @@ namespace FrigerExe
 
             //Console.WriteLine( i1.ToString());
             //Console.WriteLine(s1.ToString());
-            Console.WriteLine(r1.ToString());
-
-            Console.WriteLine("Enter a number from 1 to 10 or 100 to exit: ");
-            int number = Convert.ToInt32(Console.ReadLine());
-            switch (number)
+            //Console.WriteLine(r1.ToString());
+            int number = 0;
+            while (number != 100)
             {
-                case 1:
-                    Console.WriteLine(r1.ToString());
-                    break;
-                case 2:
-                    Console.WriteLine(r1.SpaceLeft());
-                    break;
-                case 3:
-                    Console.WriteLine("Enter item to friger:");
-                    EnterItemToFriger();
-                    break;
-                case 4:
-                    Console.WriteLine("remove item from friger:");
-                    Console.WriteLine("enter item id:");
-                    int itemId = Convert.ToInt32(Console.ReadLine());
-                    r1.RemoveItem(itemId);
-                    break;
-                case 5:
-                    r1.CleanFriger();
-                    break;
-                case 6:
-                    Console.WriteLine("What do you want to eat?");
-                    Console.WriteLine("Enter kashrut (dairy, meaty, parve):");
-                    string kashrut = Console.ReadLine();
-                    Kashrut userKashrut;
 
-                    //למה הוא לא מזהה אותו?
 
-                    userKashrut = (Kashrut)Enum.Parse(typeof(Kashrut), kashrut);
-                    Console.WriteLine("Enter type (food, drink):");
-                    string type = Console.ReadLine();
+                Console.WriteLine("Enter a number from 1 to 10 or 100 to exit: ");
+                number = Convert.ToInt32(Console.ReadLine());
+                switch (number)
+                {
+                    case 1:
+                        Console.WriteLine("Friger's details:");
+                        Console.WriteLine(r1.ToString());
+                        break;
 
-                    Type userType;
-                    userType = (Type)Enum.Parse(typeof(Type), type);
-                    r1.WhatToEat(userKashrut, userType);
-                    break;
-                case 7:
-                    foreach(Shelf s in r1.GetShelfList())
-                    {
-                        List<Item> Items = s.SortItemByExpiryDate();
-                        Console.WriteLine(Items.ToString());
-                    }
-                    break;
-                case 8:
-                    r1.SortShelfBySpace().ToString();
-                    break;
-                case 9:
-                    Console.WriteLine(SortfrigeBySpace(refrigeratorsList).ToString());
-                    break;
-                case 10:
-                    r1.readyForShopping();
-                    break;
-                case 100:
-                    return;
-                    
+                    case 2:
+                        Console.WriteLine($"The place left in the friger: {r1.SpaceLeft()}");
+                        break;
+
+                    case 3:
+                        Console.WriteLine("Enter item to friger:");
+                        EnterItemToFriger();
+                        break;
+
+                    case 4:
+                        Console.WriteLine("remove item from friger:");
+                        Console.WriteLine("enter item id:");
+                        int itemId = Convert.ToInt32(Console.ReadLine());
+                        r1.RemoveItem(itemId);
+                        break;
+
+                    case 5:
+                        List<Item> itemsToRemove = r1.CleanFriger();
+                        if (itemsToRemove.Count() == 0)
+                        {
+                            Console.WriteLine("There is no item to remove");
+                        }
+                        else
+                        {
+                            Console.WriteLine("The items that removed:");
+                            foreach (Item i in itemsToRemove)
+                            {
+                                Console.WriteLine(i.ToString());
+                            }
+                        }
+                        break;
+
+                    case 6:
+                        Console.WriteLine("What do you want to eat?");
+                        Console.WriteLine("Enter kashrut (dairy, meaty, parve):");
+                        string kashrut = Console.ReadLine();
+                        Item.Kashrut userKashrut;
+                        if (kashrut == "dairy" || kashrut == "parve" || kashrut == "meaty")
+                        {
+                            userKashrut = (Item.Kashrut)Enum.Parse(typeof(Item.Kashrut), kashrut);
+                        }
+                        else
+                        {
+                            Console.WriteLine("The kashrut input incorrect!");
+                            break;
+                        }
+                        Console.WriteLine("Enter type (food, drink):");
+                        string type = Console.ReadLine();
+
+                        Item.Type userType;
+                        if (type == "food" || type == "drink")
+                        {
+                            userType = (Item.Type)Enum.Parse(typeof(Item.Type), type);
+                        }
+                        else
+                        {
+                            Console.WriteLine("The kashrut input incorrect!");
+                            break;
+                        }
+                        List<Item> itemToEat = r1.WhatToEat(userKashrut, userType);
+
+                        foreach (Item i in itemToEat)
+                        {
+                            Console.WriteLine(i.ToString());
+                        }
+
+                        break;
+
+                    case 7:
+                        List<Item> ItemsToSort = new List<Item>();
+                        foreach (Shelf s in r1.GetShelfList())
+                        {
+                            foreach (Item i in s.GetItemsOnShelf())
+                            {
+                                ItemsToSort.Add(i);
+                            }
+                        }
+                        ItemsToSort = SortItemByExpiryDate(ItemsToSort);
+                        foreach (Item i in ItemsToSort)
+                        {
+                            Console.WriteLine(i.ToString());
+                        }
+                        break;
+
+                    case 8:
+                        List<Shelf> sortShelves = r1.SortShelfBySpace();
+                        foreach (Shelf s in sortShelves)
+                        {
+                            Console.WriteLine(s.ToString());
+                        }
+                        break;
+
+                    case 9:
+                        List<Refrigerator> sortFriger = SortfrigeBySpace(refrigeratorsList);
+                        foreach (Refrigerator r in sortFriger)
+                        {
+                            Console.WriteLine(r.ToString());
+                        }
+
+                        break;
+
+                    case 10:
+                        r1.readyForShopping();
+                        break;
+                }
+
+
+
             }
-
-
-
         }
     }
 }

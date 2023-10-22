@@ -33,16 +33,16 @@ namespace FrigerExe
         public DateTime GetExpiryDate() { return _expiryDate; }
 
         public int GetSpace() { return _space; }
-        public int GetId() { return _id;}
-        public string GetName(){ return _name; }
-        public int GetShelfId() { return _shelfId;}
-        public void SetShelfId(int sId){ _shelfId = sId; }
-        public Type GetType() {return _type; }
+        public int GetId() { return _id; }
+        public string GetName() { return _name; }
+        public int GetShelfId() { return _shelfId; }
+        public void SetShelfId(int sId) { _shelfId = sId; }
+        public Type GetType() { return _type; }
         public Kashrut GetKashrut() { return _kashrut; }
 
         public string ToString()
         {
-            string result = $"id: {this.GetId()} \n name: {this.GetName()}\n shelf id: {this.GetShelfId()}\n type: { this.GetType().ToString()}\n kashrut: {this.GetKashrut().ToString()}\n expiry date: {this.GetExpiryDate()}\n space: {this.GetSpace()} ";                               
+            string result = $"id: {this.GetId()} \n name: {this.GetName()}\n shelf id: {this.GetShelfId()}\n type: { this.GetType().ToString()}\n kashrut: {this.GetKashrut().ToString()}\n expiry date: {this.GetExpiryDate()}\n space: {this.GetSpace()} \n";
             return result;
         }
     }
